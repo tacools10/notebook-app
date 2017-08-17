@@ -26,10 +26,4 @@ export function notebookPagesReducer(state = initialState, action: notebookpages
 
 }
 
-export function getNotebookPages(state$: Observable<State>) {
-  return state$.select(s => s.notebookPages);
-}
 
-export function getPages(state$: Observable<State>) {
-  return state$.select(state => state.notebookPages);
-}

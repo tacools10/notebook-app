@@ -2,8 +2,8 @@
   <div class="container">
     <div class="row">
 
-      <div class="col-md-6 offset-md-3 col-xs-12">
-        <form [formGroup]="notebookPageForm">
+      <div class="col-md-10 offset-md-2 col-xs-12">
+        <form [formGroup]="notebookPageForm" (ngSubmit)="submitForm()">
           <fieldset [disabled]="isSubmitting">
             <fieldset class="form-group">
               <input
@@ -13,10 +13,11 @@
                 type="text">
             </fieldset>
           </fieldset>
+          <button class="btn btn-lg btn-primary" type="submit">Save</button>
         </form>
         <p class="text-xs-center">
-          <a [routerLink]="['/pages/1']" class="btn btn-primary" (click)="submitForm()">Previous</a>
-          <a [routerLink]="['/pages/2']" class="btn btn-primary" (click)="submitForm()">Next</a>
+          <a [routerLink]="['/pages', this.id]" class="btn btn-primary" (click)="previous()">Previous</a>
+          <a [routerLink]="['/pages', this.id]" class="btn btn-primary" (click)="next()">Next</a>
         </p>
       </div>
 
