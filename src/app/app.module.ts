@@ -10,6 +10,8 @@ import {RouterModule} from '@angular/router';
 import {SharedModule} from './shared/shared.module';
 import {HomeModule} from './home/home.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {StoreModule} from '@ngrx/store';
+import {reducer} from './common/reducers/index';
 
 const rootRouting: ModuleWithProviders = RouterModule.forRoot([], { useHash: true });
 
@@ -24,7 +26,8 @@ const rootRouting: ModuleWithProviders = RouterModule.forRoot([], { useHash: tru
     rootRouting,
     SharedModule,
     HomeModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    StoreModule.provideStore(reducer)
   ],
   providers: [],
   bootstrap: [AppComponent]

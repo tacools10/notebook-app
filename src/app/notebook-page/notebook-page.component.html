@@ -3,10 +3,6 @@
     <div class="row">
 
       <div class="col-md-6 offset-md-3 col-xs-12">
-        <p class="text-xs-center">
-          <a [routerLink]="['/previous']"></a>
-          <a [routerLink]="['/next']"></a>
-        </p>
         <form [formGroup]="notebookPageForm" (ngSubmit)="submitForm()">
           <fieldset [disabled]="isSubmitting">
             <fieldset class="form-group">
@@ -20,6 +16,10 @@
             </button>
           </fieldset>
         </form>
+        <p class="text-xs-center">
+          <a [routerLink]="['/previous']" class="btn btn-primary">Previous</a>
+          <a [routerLink]="['/next']" class="btn btn-primary">Next</a>
+        </p>
       </div>
 
     </div>
