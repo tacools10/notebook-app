@@ -8,13 +8,10 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 const notebookPageRouting: ModuleWithProviders = RouterModule.forChild([
   {
-    path: 'next',
+    path: 'pages/:id',
     component: NotebookPageComponent
   },
-  {
-    path: 'previous',
-    component: NotebookPageComponent
-  }
+
 ]);
 
 @NgModule({

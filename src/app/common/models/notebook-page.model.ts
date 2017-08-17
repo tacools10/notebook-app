@@ -2,7 +2,13 @@ export class NotebookPage {
   id: number;
   content: string;
 
-  constructor() {}
+  constructor(
+    id: number,
+    content: string
+  ) {
+    this.id = id;
+    this.content = content;
+  }
 }
 
 

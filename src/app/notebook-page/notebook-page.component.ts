@@ -1,6 +1,6 @@
 import {Component, OnChanges, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {NotebookPage} from '../common/models/notebook-page.model';
 import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
@@ -11,7 +11,7 @@ import * as notebookpages from '../common/actions/notebook-page.actions';
   selector: 'app-notebook-page',
   templateUrl: './notebook-page.component.html'
 })
-export class NotebookPageComponent implements OnChanges, OnInit {
+export class NotebookPageComponent implements OnInit {
   id = 0;
   content: string = '';
   notebookPage: NotebookPage;
@@ -43,30 +43,21 @@ export class NotebookPageComponent implements OnChanges, OnInit {
     );
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.notebookPageForm = this.fb.group({
       content: new FormControl('', [Validators.required, Validators.minLength(1)])
     });
-  }
-
-  ngOnChanges() {
-    this.route.url.subscribe(data => {
-      if (data.length !== 0) {
-        this.type = data[data.length - 1].path;
-      } else {
-        this.type = data[0].path;
-      }
-      console.log(this.type);
-
-
+    this.route.params.subscribe(params => {
+      this.id = +params['id'];
     });
   }
+
+
 
   submitForm() {
     this.isSubmitting = true;
     console.log(this.id);
-    this.notebookPage.id = ++this.id;
-    this.notebookPage.content = this.notebookPageForm.value.content;
+    this.notebookPage = new NotebookPage(this.id + 1, this.notebookPageForm.value);
     console.log(this.notebookPage.id);
     console.log(this.notebookPage.content);
     this.addNotebookPage(this.notebookPage);
