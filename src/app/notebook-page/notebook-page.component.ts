@@ -1,6 +1,6 @@
-import {AfterViewChecked, AfterViewInit, Component, OnChanges, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {NotebookPage} from '../common/models/notebook-page.model';
 
 import {NotebookService} from '../services/notebook.service';
@@ -10,10 +10,8 @@ import {NotebookService} from '../services/notebook.service';
   templateUrl: './notebook-page.component.html'
 })
 export class NotebookPageComponent implements OnInit {
-  id = 1;
-  index = 1;
+  id = 0;
   content: string = '';
-  type: string = '';
   isSubmitting: boolean = false;
   notebookPageForm: FormGroup;
 
@@ -45,30 +43,28 @@ export class NotebookPageComponent implements OnInit {
   }
 
   next() {
-    // console.log(this.id);
-    // console.log(this.notebookService.notebookPages.length);
     if (this.id <= 5 && this.getCurrentNotebookPage(this.id) === undefined) {
       this.isSubmitting = false;
       this.id = this.id + 1;
       this.ngOnInit();
-    } else {
+    } else if (this.getCurrentNotebookPage(this.id) !== undefined) {
       this.ngOnInit();
-      if (this.getCurrentNotebookPage(this.id) !== undefined) {
-        console.log(this.getCurrentNotebookPage(this.id).content);
-        this.notebookPageForm.controls['content'].setValue(this.getCurrentNotebookPage(this.id).content);
-        console.log(this.notebookPageForm.controls['content'].value);
-      }
+      this.isSubmitting = false;
+      this.notebookPageForm.controls['content'].setValue(JSON.parse(
+        JSON.stringify(this.getCurrentNotebookPage(this.id).content))['content']);
+      this.id = this.id + 1;
     }
   }
 
   previous() {
-    console.log(this.id);
-    console.log(this.getCurrentNotebookPage(this.id - 1));
-    if (this.id > 0 && this.getCurrentNotebookPage(this.id - 1) !== undefined) {
-      this.id = this.id - 1;
+    if (this.id > 0 && this.getCurrentNotebookPage(this.id) !== undefined && this.id <= 5 ) {
       this.ngOnInit();
-      this.notebookPageForm.controls['content'].setValue(this.getCurrentNotebookPage(this.id).content);
+      this.isSubmitting = false;
+      this.notebookPageForm.controls['content'].setValue(JSON.parse(
+        JSON.stringify(this.getCurrentNotebookPage(this.id).content))['content']);
+      this.id = this.id - 1;
     } else {
+      this.id = this.id - 1;
       this.ngOnInit();
       this.isSubmitting = false;
     }
@@ -78,8 +74,7 @@ export class NotebookPageComponent implements OnInit {
     this.isSubmitting = true;
     this.content = this.notebookPageForm.value;
     if (this.route.snapshot.params.id === undefined) {
-      // console.log('in');
-      this.id = this.notebookService.notebookPages.length;
+      this.id = 1;
     } else {
       this.id = this.id - 1;
     }
