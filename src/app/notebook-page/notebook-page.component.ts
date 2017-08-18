@@ -10,7 +10,7 @@ import {NotebookService} from '../services/notebook.service';
   templateUrl: './notebook-page.component.html'
 })
 export class NotebookPageComponent implements OnInit {
-  id = 0;
+  id = 1;
   content: string = '';
   isSubmitting: boolean = false;
   notebookPageForm: FormGroup;
@@ -21,7 +21,6 @@ export class NotebookPageComponent implements OnInit {
     private notebookService: NotebookService,
     private fb: FormBuilder
   ) {
-    // use FormBuilder to create a form group
     this.notebookPageForm = this.fb.group({
       'content': '',
     });
@@ -40,10 +39,12 @@ export class NotebookPageComponent implements OnInit {
     this.notebookPageForm = this.fb.group({
       content: new FormControl('', [Validators.required, Validators.minLength(1)])
     });
+    console.log('On init id: ' + this.id);
   }
 
   next() {
-    if (this.id <= 5 && this.getCurrentNotebookPage(this.id) === undefined) {
+    console.log('Entry id: ' + this.id);
+    if (this.id <= 5 && this.id > 0 && this.getCurrentNotebookPage(this.id) === undefined) {
       this.isSubmitting = false;
       this.id = this.id + 1;
       this.ngOnInit();
@@ -54,6 +55,7 @@ export class NotebookPageComponent implements OnInit {
         JSON.stringify(this.getCurrentNotebookPage(this.id).content))['content']);
       this.id = this.id + 1;
     }
+    console.log('Exit id: ' + this.id);
   }
 
   previous() {
@@ -76,7 +78,11 @@ export class NotebookPageComponent implements OnInit {
     if (this.route.snapshot.params.id === undefined) {
       this.id = 1;
     } else {
-      this.id = this.id - 1;
+      if (this.id > 1) {
+        this.id = this.id - 1;
+      } else {
+        this.id = this.id + 1;
+      }
     }
     this.addNotebookPage(new NotebookPage(this.id, this.content));
   }
