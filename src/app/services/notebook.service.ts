@@ -8,6 +8,7 @@ import {Http} from '@angular/http';
 export class NotebookService {
   private currentPageSubject = new BehaviorSubject<NotebookPage>(new NotebookPage(0, ''));
   public currentPage = this.currentPageSubject.asObservable();
+  public notebookPages: NotebookPage[] = [new NotebookPage(0, '')];
 
   constructor (
     private http: Http
@@ -15,10 +16,14 @@ export class NotebookService {
 
   setPage(notebookPage: NotebookPage) {
     this.currentPageSubject.next(notebookPage);
+    if (this.notebookPages.length <= 6) {
+      this.notebookPages.push(notebookPage);
+    }
+    console.log(this.notebookPages);
   }
 
-  getCurrentPage(): NotebookPage {
-    return this.currentPageSubject.value;
+  getCurrentPage(index: number): NotebookPage {
+    return this.notebookPages[index];
   }
 
 }

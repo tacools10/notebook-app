@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import * as fromRoot from '../common/reducers';
 import * as notebookpages from '../common/actions/notebook-page.actions';
-import {NotebookService} from "../services/notebook.service";
+import {NotebookService} from '../services/notebook.service';
 
 @Component({
   selector: 'app-notebook-page',
@@ -41,6 +41,10 @@ export class NotebookPageComponent implements OnInit {
     this.notebookService.setPage(notebookPage);
   }
 
+  getCurrentNotebookPage(index: number): NotebookPage {
+    return this.notebookService.getCurrentPage(index);
+  }
+
   ngOnInit(): void {
     this.notebookPageForm = this.fb.group({
       content: new FormControl('', [Validators.required, Validators.minLength(1)])
@@ -48,26 +52,27 @@ export class NotebookPageComponent implements OnInit {
   }
 
   next() {
-    if (this.id < 5) {
+    console.log(this.id);
+    console.log(this.notebookService.notebookPages.length);
+    if (this.id < 5 && this.notebookService.notebookPages.length <= this.id + 2) {
       this.isSubmitting = false;
-      // console.log(this.id);
       this.id = this.id + 1;
       this.ngOnInit();
+    } else {
+      this.ngOnInit();
+      if (this.getCurrentNotebookPage(this.id) !== undefined) {
+        this.notebookPageForm.controls['content'].setValue(this.getCurrentNotebookPage(this.id).content);
+      }
     }
   }
 
   previous() {
-    if (this.id > 0) {
+    if (this.id > 0 && this.notebookService.notebookPages.length > 1) {
       this.id = this.id - 1;
       this.isSubmitting = false;
-      // console.log(this.id);
       this.ngOnInit();
-      this.notebookPages = this._store.select('notebookPages');
-      this.notebookPage = this.notebookPages.subscribe(
-        data => (data[0].id, data[0].content));
-      console.log(this.notebookPagesArray);
-      this.notebookPageForm.controls['content'].setValue(content);
-      console.log(this.notebookPageForm.controls['content'].value);
+      console.log(this.getCurrentNotebookPage(this.id).content);
+      // this.notebookPageForm.controls['content'].setValue(this.getCurrentNotebookPage(this.id).content);
     }
   }
 
@@ -76,9 +81,9 @@ export class NotebookPageComponent implements OnInit {
     this.content = this.notebookPageForm.value;
     if (this.route.snapshot.params.id === undefined) {
       // console.log('in');
-      this.id = 1;
+      this.id = this.notebookService.notebookPages.length;
     } else {
-      this.id = parseInt(this.route.snapshot.params.id, 10);
+      this.id = parseInt(this.route.snapshot.params.id, 10) + 1 ;
       // console.log("snapshot not undefined");
       // console.log(this.id);
     }
