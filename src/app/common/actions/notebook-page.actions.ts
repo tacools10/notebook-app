@@ -6,14 +6,20 @@ export const ActionTypes = {
   ADD_PAGE: 'Add a page to the notebook',
   CLEAR_PAGES:  'Refresh all of the pages',
   INCREMENT_PAGE: 'Increment the page number',
-  DECREMENT_PAGE: 'Decrement the page number'
+  DECREMENT_PAGE: 'Decrement the page number',
+  GET_PAGES: 'Get all existing pages'
 };
 
 
 export class AddPageAction implements Action {
   type = ActionTypes.ADD_PAGE;
+  id: number;
+  content: string;
 
-  constructor(public payload: NotebookPage) {}
+  constructor(public payload: NotebookPage) {
+    this.id = payload.id;
+    this.content = payload.content;
+  }
 }
 
 export class ClearPagesAction implements Action {
@@ -34,5 +40,11 @@ export class DecrementPageAction implements Action {
   constructor(public payload: NotebookPage) {}
 }
 
+export class GetPagesAction implements Action {
+  type = ActionTypes.GET_PAGES;
+
+  constructor(public payload: any) {}
+}
+
 export type Actions = AddPageAction | ClearPagesAction |
-                      IncrementPageAction | DecrementPageAction;
+                      IncrementPageAction | DecrementPageAction | GetPagesAction;

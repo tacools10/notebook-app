@@ -7,7 +7,7 @@ import {Http} from '@angular/http';
 @Injectable()
 export class NotebookService {
   private currentPageSubject = new BehaviorSubject<NotebookPage>(new NotebookPage(0, ''));
-  public currentPage = this.currentPageSubject.asObservable().distinctUntilChanged();
+  public currentPage = this.currentPageSubject.asObservable();
 
   constructor (
     private http: Http

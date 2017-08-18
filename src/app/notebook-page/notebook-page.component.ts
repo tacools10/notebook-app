@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import {Store} from '@ngrx/store';
 import * as fromRoot from '../common/reducers';
 import * as notebookpages from '../common/actions/notebook-page.actions';
-import {isUndefined} from "util";
+import {NotebookService} from "../services/notebook.service";
 
 @Component({
   selector: 'app-notebook-page',
@@ -27,23 +27,18 @@ export class NotebookPageComponent implements OnInit {
 
     private _store: Store<fromRoot.State>,
     private route: ActivatedRoute,
-    private router: Router,
+    private notebookService: NotebookService,
     private fb: FormBuilder
   ) {
     // use FormBuilder to create a form group
     this.notebookPageForm = this.fb.group({
       'content': '',
     });
-    this.notebookPages = this._store.select(fromRoot.getCurrentPages);
   }
 
 
   addNotebookPage(notebookPage: NotebookPage) {
-    this._store.dispatch(new notebookpages.AddPageAction({
-      id: this.id,
-      content: this.content
-    })
-    );
+    this.notebookService.setPage(notebookPage);
   }
 
   ngOnInit(): void {
@@ -55,7 +50,7 @@ export class NotebookPageComponent implements OnInit {
   next() {
     if (this.id < 5) {
       this.isSubmitting = false;
-      console.log(this.id);
+      // console.log(this.id);
       this.id = this.id + 1;
       this.ngOnInit();
     }
@@ -65,24 +60,28 @@ export class NotebookPageComponent implements OnInit {
     if (this.id > 0) {
       this.id = this.id - 1;
       this.isSubmitting = false;
-      console.log(this.id);
+      // console.log(this.id);
       this.ngOnInit();
-      this.notebookPageForm.setValue(this.notebookPages.subscribe(data => data.map(entry => entry[0])));
+      this.notebookPages = this._store.select('notebookPages');
+      this.notebookPage = this.notebookPages.subscribe(
+        data => (data[0].id, data[0].content));
+      console.log(this.notebookPagesArray);
+      this.notebookPageForm.controls['content'].setValue(content);
+      console.log(this.notebookPageForm.controls['content'].value);
     }
   }
 
-  submitForm(): number {
+  submitForm() {
     this.isSubmitting = true;
     this.content = this.notebookPageForm.value;
     if (this.route.snapshot.params.id === undefined) {
-      console.log('in');
+      // console.log('in');
       this.id = 1;
     } else {
       this.id = parseInt(this.route.snapshot.params.id, 10);
-      console.log("snapshot not undefined");
-      console.log(this.id);
+      // console.log("snapshot not undefined");
+      // console.log(this.id);
     }
     this.addNotebookPage(new NotebookPage(this.id, this.content));
-    return this.id;
   }
 }

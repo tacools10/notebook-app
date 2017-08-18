@@ -14,9 +14,14 @@ export function notebookPagesReducer(state = initialState, action: notebookpages
   switch (action.type) {
     case notebookpages.ActionTypes.ADD_PAGE: {
       const notebookPage: NotebookPage = action.payload;
-
       return {
         notebookPages: [...state.notebookPages, notebookPage]
+      };
+    }
+    case notebookpages.ActionTypes.GET_PAGES: {
+      const notebookPage: NotebookPage[] = [...state.notebookPages];
+      return {
+        notebookPages: notebookPage,
       };
     }
 

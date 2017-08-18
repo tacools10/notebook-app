@@ -12,6 +12,7 @@ import {HomeModule} from './home/home.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StoreModule} from '@ngrx/store';
 import {reducer} from './common/reducers/index';
+import {NotebookService} from "./services/notebook.service";
 
 const rootRouting: ModuleWithProviders = RouterModule.forRoot([], { useHash: true });
 
@@ -29,7 +30,7 @@ const rootRouting: ModuleWithProviders = RouterModule.forRoot([], { useHash: tru
     NgbModule.forRoot(),
     StoreModule.provideStore(reducer)
   ],
-  providers: [],
+  providers: [NotebookService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
