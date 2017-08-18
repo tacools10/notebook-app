@@ -13,14 +13,17 @@
                 type="text">
             </fieldset>
           </fieldset>
-          <button class="btn btn-lg btn-primary" type="submit">Save</button>
+          <button class="btn btn-primary" type="submit">Save</button>
         </form>
-        <p class="text-xs-center">
+      </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-10 offset-md-2 col-xs-12">
+        <p class="text-md-left">
           <a [routerLink]="['/pages', this.id]" class="btn btn-primary" (click)="previous()">Previous</a>
           <a [routerLink]="['/pages', this.id]" class="btn btn-primary" (click)="next()">Next</a>
         </p>
       </div>
-
     </div>
   </div>
 </div>

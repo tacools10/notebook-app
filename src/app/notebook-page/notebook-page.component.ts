@@ -2,10 +2,7 @@ import {AfterViewChecked, AfterViewInit, Component, OnChanges, OnInit} from '@an
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {NotebookPage} from '../common/models/notebook-page.model';
-import {Observable} from 'rxjs/Observable';
-import {Store} from '@ngrx/store';
-import * as fromRoot from '../common/reducers';
-import * as notebookpages from '../common/actions/notebook-page.actions';
+
 import {NotebookService} from '../services/notebook.service';
 
 @Component({
@@ -13,19 +10,15 @@ import {NotebookService} from '../services/notebook.service';
   templateUrl: './notebook-page.component.html'
 })
 export class NotebookPageComponent implements OnInit {
-  id = 0;
+  id = 1;
   index = 1;
   content: string = '';
-  notebookPage: NotebookPage;
-  notebookPages: Observable<NotebookPage[]>;
-  notebookPagesArray: NotebookPage[];
   type: string = '';
   isSubmitting: boolean = false;
   notebookPageForm: FormGroup;
 
   constructor(
 
-    private _store: Store<fromRoot.State>,
     private route: ActivatedRoute,
     private notebookService: NotebookService,
     private fb: FormBuilder
@@ -52,27 +45,32 @@ export class NotebookPageComponent implements OnInit {
   }
 
   next() {
-    console.log(this.id);
-    console.log(this.notebookService.notebookPages.length);
-    if (this.id < 5 && this.notebookService.notebookPages.length <= this.id + 2) {
+    // console.log(this.id);
+    // console.log(this.notebookService.notebookPages.length);
+    if (this.id <= 5 && this.getCurrentNotebookPage(this.id) === undefined) {
       this.isSubmitting = false;
       this.id = this.id + 1;
       this.ngOnInit();
     } else {
       this.ngOnInit();
       if (this.getCurrentNotebookPage(this.id) !== undefined) {
+        console.log(this.getCurrentNotebookPage(this.id).content);
         this.notebookPageForm.controls['content'].setValue(this.getCurrentNotebookPage(this.id).content);
+        console.log(this.notebookPageForm.controls['content'].value);
       }
     }
   }
 
   previous() {
-    if (this.id > 0 && this.notebookService.notebookPages.length > 1) {
+    console.log(this.id);
+    console.log(this.getCurrentNotebookPage(this.id - 1));
+    if (this.id > 0 && this.getCurrentNotebookPage(this.id - 1) !== undefined) {
       this.id = this.id - 1;
-      this.isSubmitting = false;
       this.ngOnInit();
-      console.log(this.getCurrentNotebookPage(this.id).content);
-      // this.notebookPageForm.controls['content'].setValue(this.getCurrentNotebookPage(this.id).content);
+      this.notebookPageForm.controls['content'].setValue(this.getCurrentNotebookPage(this.id).content);
+    } else {
+      this.ngOnInit();
+      this.isSubmitting = false;
     }
   }
 
@@ -83,9 +81,7 @@ export class NotebookPageComponent implements OnInit {
       // console.log('in');
       this.id = this.notebookService.notebookPages.length;
     } else {
-      this.id = parseInt(this.route.snapshot.params.id, 10) + 1 ;
-      // console.log("snapshot not undefined");
-      // console.log(this.id);
+      this.id = this.id - 1;
     }
     this.addNotebookPage(new NotebookPage(this.id, this.content));
   }

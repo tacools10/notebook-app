@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {NotebookPage} from '../common/models/notebook-page.model';
 import {Http} from '@angular/http';
+import {findIndex} from "rxjs/operator/findIndex";
 
 
 @Injectable()
@@ -23,7 +24,7 @@ export class NotebookService {
   }
 
   getCurrentPage(index: number): NotebookPage {
-    return this.notebookPages[index];
+    return this.notebookPages.find(notebookPage => notebookPage.id === index);
   }
 
 }
